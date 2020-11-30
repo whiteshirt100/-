@@ -86,102 +86,111 @@ void WorkerManager::addEmp()
 {
 	cout << "请输入增加职工数量: " << endl;
 	int addNum = 0;
-	// 限制必须输入整数
-	isInt(cin, addNum);
 
-	if (addNum > 0)
+	while (true)
 	{
-		// 计算新空间大小
-		int newSize = this->m_EmpNum + addNum;
+		// 限制必须输入整数
+		inputInt(cin, addNum);
 
-		// 开辟新空间
-		Worker** newSpace = new Worker*[newSize];
-
-		// 将原空间下数据，拷贝到新空间下
-		if (this->m_EmpArray != nullptr)
+		if (addNum > 0)
 		{
-			for (int i = 0; i < this->m_EmpNum; i++)
-			{
-				newSpace[i] = this->m_EmpArray[i];
-			}
+			break;
 		}
+		cout << "输入数据有误，请重新输入！" << endl;
+	}
 
-		// 批量添加新数据
-		for (int i = 0; i < addNum; i++)
+	// 计算新空间大小
+	int newSize = this->m_EmpNum + addNum;
+
+	// 开辟新空间
+	Worker** newSpace = new Worker*[newSize];
+
+	// 将原空间下数据，拷贝到新空间下
+	if (this->m_EmpArray != nullptr)
+	{
+		for (int i = 0; i < this->m_EmpNum; i++)
 		{
-			int		id = 0;			// 职工编号
-			string	name = "";		// 职工姓名
-			int		dSelect = 0;	// 部门选择
+			newSpace[i] = this->m_EmpArray[i];
+		}
+	}
 
-			cout << "请输入第 " << i + 1 << " 个新职工编号：" << endl;
+	// 批量添加新数据
+	for (int i = 0; i < addNum; i++)
+	{
+		int		id = 0;			// 职工编号
+		string	name = "";		// 职工姓名
+		int		dSelect = 0;	// 部门选择
 
-		reEnter_addNum_id:
-			id = 0;
+		cout << "请输入第 " << i + 1 << " 个新职工编号：" << endl;
+
+		while (true)
+		{
 			// 限制必须输入整数
-			isInt(cin, id);
+			inputInt(cin, id);
 
 			// 职工编号不能重复
-			while (this->isExist(id) != -1)
+			if (this->isExist(id) == -1)
 			{
-				cout << "职工编号已存在，请重新输入编号：" << endl;
-				goto reEnter_addNum_id;
-			}
-
-			cout << "请输入第 " << i + 1 << " 个新职工姓名：" << endl;
-			cin >> name;
-
-		reEnter_addNum_dSelect:
-			cout << "请选择该职工岗位：" << endl;
-			cout << "1、普通职工" << endl;
-			cout << "2、经理" << endl;
-			cout << "3、老板" << endl;
-			dSelect = 0;
-			// 限制输入必须为整数
-			isInt(cin, dSelect);
-
-			if (dSelect != 1 && dSelect != 2 && dSelect != 3)
-			{
-				cout << "请输入正确的数字" << endl;
-				goto reEnter_addNum_dSelect;
-			}
-
-			Worker* worker = nullptr;
-			switch (dSelect)
-			{
-			case 1:
-				worker = new Employee(id, name, 1);
-				break;
-			case 2:
-				worker = new Manager(id, name, 2);
-				break;
-			case 3:
-				worker = new Boss(id, name, 3);
-				break;
-			default:
 				break;
 			}
-			// 将创建职工指针，保存到数组中
-			newSpace[this->m_EmpNum + i] = worker;
+			cout << "职工编号已存在，请重新输入编号：" << endl;
 		}
 
-		delete[] this->m_EmpArray;  // 释放原有空间
+		cout << "请输入第 " << i + 1 << " 个新职工姓名：" << endl;
+		cin >> name;
 
-		this->m_EmpArray = newSpace;  // 更改新空间的指向
-		this->m_EmpNum = newSize;  // 更新新的职工人数
+		cout << "请选择该职工岗位：" << endl;
+		cout << "1、普通职工" << endl;
+		cout << "2、经理" << endl;
+		cout << "3、老板" << endl;
+		dSelect = 0;
 
-		cout << "成功添加" << addNum << "名新职工！" << endl;  // 提示添加成功
+		while (true)
+		{
+			// 限制输入必须为整数
+			inputInt(cin, dSelect);
 
-		this->m_FileEmpty = false;  // 更新文件不为空的标志
-		this->save();  // 保存到文件中
+			if (dSelect >= 1 && dSelect <= 3)
+			{
+				break;
+			}
+			cout << "请输入正确的数字" << endl;
+		}
 
-		// 按任意键后 清屏回到上级目录
-		system("pause");
-		system("cls");
+		Worker* worker = nullptr;
+		switch (dSelect)
+		{
+		case 1:
+			worker = new Employee(id, name, 1);
+			break;
+		case 2:
+			worker = new Manager(id, name, 2);
+			break;
+		case 3:
+			worker = new Boss(id, name, 3);
+			break;
+		default:
+			break;
+		}
+		// 将创建职工指针，保存到数组中
+		newSpace[this->m_EmpNum + i] = worker;
 	}
-	else
-	{
-		cout << "输入数据有误" << endl;
-	}
+
+	delete[] this->m_EmpArray;  // 释放原有空间
+
+	this->m_EmpArray = newSpace;  // 更改新空间的指向
+	this->m_EmpNum = newSize;  // 更新新的职工人数
+
+	cout << "成功添加" << addNum << "名新职工！" << endl;  // 提示添加成功
+
+	this->m_FileEmpty = false;  // 更新文件不为空的标志
+	this->save();  // 保存到文件中
+
+	// 按任意键后 清屏回到上级目录
+	system("pause");
+	system("cls");
+
+
 }
 
 // 保存文件
@@ -204,9 +213,9 @@ int WorkerManager::getNum()
 {
 	ifstream ifs;
 	ifs.open(FILENAME, ios::in);
-	int id;
+	int id = 0;
 	string name;
-	int dId;
+	int dId = 0;
 	int num = 0;
 
 	while (ifs >> id && ifs >> name && ifs >> dId)
@@ -222,9 +231,9 @@ void WorkerManager::initEmp()
 	ifstream ifs;
 	ifs.open(FILENAME, ios::in);
 
-	int id;
+	int id = 0;
 	string name;
-	int dId;
+	int dId = 0;
 
 	int index = 0;
 	while (ifs >> id && ifs >> name && ifs >> dId)
@@ -295,7 +304,7 @@ void WorkerManager::delEmp()
 		int id = 0;
 
 		// 限制必须输入整数
-		isInt(cin, id);
+		inputInt(cin, id);
 
 		int index = this->isExist(id);
 		if (index != -1)  // 说明职工存在，并且要删除index上位置上的员工
@@ -350,7 +359,7 @@ void WorkerManager::modEmp()
 		int id = 0;
 
 		// 限制必须输入整数
-		isInt(cin, id);
+		inputInt(cin, id);
 
 		int ret = this->isExist(id);
 		if (ret != -1)
@@ -364,35 +373,39 @@ void WorkerManager::modEmp()
 
 			cout << "查到：" << id << "号职工，请输入新职工号：" << endl;
 
-		reEnter_modEmp_newId:
-			newId = 0;
-			// 限制必须输入整数
-			isInt(cin, newId);
-
-			while (this->isExist(newId) != -1)
+			while (true)
 			{
-				cout << "职工编号已存在，请重新输入编号：" << endl;
-				goto reEnter_modEmp_newId;
-			}
+				// 限制必须输入整数
+				inputInt(cin, newId);
 
+				if (this->isExist(newId) == -1)
+				{
+					break;
+				}
+				cout << "职工编号已存在，请重新输入编号：" << endl;
+			}
+			
 			cout << "请输入新姓名：" << endl;
 			cin >> newName;
 
-		reEnter_modEmp_dSelect:
 			cout << "请输入岗位：" << endl;
 			cout << "1、普通职工" << endl;
 			cout << "2、经理" << endl;
 			cout << "3、老板" << endl;
-			dSelect = 0;
-			// 限制必须输入整数
-			isInt(cin, dSelect);
+			dSelect = 0;;
 
-			if (dSelect != 1 && dSelect != 2 && dSelect != 3)
+			while (true)
 			{
-				cout << "请输入正确的数字" << endl;
-				goto reEnter_modEmp_dSelect;
-			}
+				// 限制必须输入整数
+				inputInt(cin, dSelect);
 
+				if (dSelect >= 1 && dSelect <= 3)
+				{
+					break;
+				}
+				cout << "请输入正确的数字" << endl;
+			}
+			
 			Worker* worker = nullptr;
 
 			switch (dSelect)
@@ -411,9 +424,7 @@ void WorkerManager::modEmp()
 			}
 			
 			this->m_EmpArray[ret] = worker;  // 更改数据 到数组中
-
 			cout << "修改成功！" << this->m_EmpArray[ret]->m_DeptId << endl;
-
 			this->save();  // 保存到文件中
  		}
 		else
@@ -435,22 +446,25 @@ void WorkerManager::findEmp()
 	}
 	else
 	{
-	reEnter_findEmp_select:
 		cout << "请输入查找的方式：" << endl;
 		cout << "1、按职工编号查找" << endl;
 		cout << "2、按姓名查找" << endl;
 		int select = 0;
-		// 限制必须输入整数
-		isInt(cin, select);
 
-		while (select != 1 && select != 2)
+		while (true)
 		{
+			// 限制必须输入整数
+			inputInt(cin, select);
+
+			if (select >= 1 && select <= 2)
+			{
+				break;
+			}
 			cout << "请输入正确的数字" << endl;
-			goto reEnter_findEmp_select;
 		}
 
 		if (select == 1)  // 按职工编号查找
-		{	
+		{
 			int id;
 			cout << "请输入查找的职工编号：" << endl;
 			cin >> id;
@@ -465,7 +479,7 @@ void WorkerManager::findEmp()
 				cout << "查找失败，查无此人！" << endl;
 			}
 		}
-		else if (select == 2)  // 按姓名查找
+		else		// 按姓名查找
 		{
 			string name = "";
 			cout << "请输入要查找的姓名：" << endl;
@@ -476,10 +490,10 @@ void WorkerManager::findEmp()
 			{
 				if (this->m_EmpArray[i]->m_Name == name)
 				{
-					cout << "查找成功，职工编号为 " 
-						 << this->m_EmpArray[i]->m_Id 
-						 << " 号的信息如下：" << endl;
-					
+					cout << "查找成功，职工编号为 "
+						<< this->m_EmpArray[i]->m_Id
+						<< " 号的信息如下：" << endl;
+
 					flag = true;
 					this->m_EmpArray[i]->showInfo();
 				}
@@ -488,11 +502,6 @@ void WorkerManager::findEmp()
 			{
 				cout << "查找失败，查无此人！" << endl;
 			}
-		}
-		else
-		{
-			cin.clear();
-			cout << "输入选项有误！" << endl;
 		}
 	}
 	// 按任意键清屏
@@ -512,18 +521,21 @@ void WorkerManager::sortEmp()
 	}
 	else
 	{
-	reEnter_sortEmp_select:
 		cout << "请选择排序方式：" << endl;
 		cout << "1、按职工号进行升序排列" << endl;
 		cout << "2、按职工号进行降序排列" << endl;	
 		int select = 0;
-		// 限制必须输入整数
-		isInt(cin, select);
 
-		while (select != 1 && select != 2)
+		while (true)
 		{
+			// 限制必须输入整数
+			inputInt(cin, select);
+
+			if (select >= 1 && select <= 2)
+			{
+				break;
+			}
 			cout << "请输入正确的数字" << endl;
-			goto reEnter_sortEmp_select;
 		}
 
 		for (int i = 0; i < this->m_EmpNum; i++)
@@ -562,18 +574,22 @@ void WorkerManager::sortEmp()
 // 清空文件
 void WorkerManager::cleanFile()
 {
-reEnter_cleanFile_select:
 	cout << "确定清空？" << endl;
 	cout << "1、确认" << endl;
 	cout << "2、返回" << endl;
 	int select = 0;
-	// 限制必须输入整数
-	isInt(cin, select);
 
-	while (select != 1 && select != 2)
+	while (true)
 	{
+		// 限制必须输入整数
+		inputInt(cin, select);
+
+		if (select >= 1 && select <= 2)
+		{
+			break;
+		}
+
 		cout << "请输入正确的数字" << endl;
-		goto reEnter_cleanFile_select;
 	}
 
 	if (select == 1)
@@ -607,20 +623,4 @@ reEnter_cleanFile_select:
 	system("cls");
 }
 
-// 限制必须输入整数
-void WorkerManager::isInt(istream & in, int& num)
-{
-	int s;
-	char str[200];
-	in >> num;
-	s = in.rdstate();
-	while (s)
-	{
-		in.clear();
-		in >> str;
-		cout << "您的输入为非整数，请您重新输入" << endl;
-		in >> num;
-		s = in.rdstate();
-	}
-}
 

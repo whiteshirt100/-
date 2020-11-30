@@ -1,9 +1,11 @@
 
 #include <iostream>
 using namespace std;
-#include "speechManager.h"
 #include <string>
 #include <ctime>
+#include "speechManager.h"
+#include "function.h"
+
 /*
 1 比赛规则
 
@@ -50,7 +52,7 @@ int main()
 reEnter_main_choice:
 		choice = 0;
 		// 限制必须输入整数
-		SpeechManager::isInt(cin, choice);
+		SpeechManager::inputInt(cin, choice);
 
 		while (choice >3 || choice <0)
 		{

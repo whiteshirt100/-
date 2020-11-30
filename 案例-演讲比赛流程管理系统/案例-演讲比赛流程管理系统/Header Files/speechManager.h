@@ -2,18 +2,17 @@
 
 #include <iostream>
 using namespace std;
-
 #include <vector>
 #include <map>
 #include <deque>
-#include "speaker.h"
 #include <algorithm>
 #include <functional>
 #include <numeric>
 #include <string>
 #include <fstream>
+#include "speaker.h"
+#include "function.h"
 
-//const static string FILENAME = "speech.csv";
 #define FILENAME "speech.csv"
 
 // 演讲管理类
@@ -62,13 +61,8 @@ public:
 	// 清空记录
 	void clearRecord();
 
-	// 限制必须输入整数
-	static void isInt(istream & in, int& num);
-
 	// 析构函数
 	~SpeechManager();
-
-
 
 public:
 	//成员属性

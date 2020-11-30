@@ -7,6 +7,7 @@ using namespace std;
 #include "employee.h"
 #include "manager.h"
 #include "boss.h"
+#include "function.h"
 
 int main()
 {
@@ -16,16 +17,11 @@ int main()
 	{
 		// 展示菜单
 		wm.showMenu();
-reEnter_main_choice:
+
 		cout << "请输入您的选择:" << endl;
 		choice = 0;
-		WorkerManager::isInt(cin, choice);
-
-		while (choice < 0 || choice > 7)
-		{
-			cout << "请输入正确的数字" << endl;
-			goto reEnter_main_choice;
-		}
+		// 限制输入为整数
+		inputInt(cin, choice);
 
 		switch (choice)
 		{
@@ -40,7 +36,7 @@ reEnter_main_choice:
 			break;
 		case 3:  // 删除职工
 			wm.delEmp();
-			break;		
+			break;
 		case 4:  // 修改职工
 			wm.modEmp();
 			break;
@@ -54,9 +50,12 @@ reEnter_main_choice:
 			wm.cleanFile();
 			break;
 		default:
+			cout << "请输入正确的数字" << endl;
+			system("pause");
 			system("cls");  // 清屏
 			break;
 		}
+		
 	}
 
 	system("pause");

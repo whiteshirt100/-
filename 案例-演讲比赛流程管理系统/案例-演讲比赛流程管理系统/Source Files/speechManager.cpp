@@ -364,46 +364,29 @@ void SpeechManager::clearRecord()
 
 	int select = 0;
 
-reEnter_clearRecord_select:
-	select = 0;
-	// 限制必须输入整数
-	isInt(cin, select);
-
-	while (select != 1 && select != 2)
+	while (true)
 	{
-		cout << "请输入正确的数字" << endl;
-		goto reEnter_clearRecord_select;
+		// 限制必须输入整数
+		inputInt(cin, select);
+
+		if (select >= 1 && select <= 2)
+		{
+			break;
+		}
+		cout << "输入有误，请重新输入" << endl;
 	}
+
 	if (select == 1)
 	{
 		// 确认清空
 		ofstream ofs(FILENAME, ios::trunc);
 		ofs.close();
-
 		this->reset();
-
 		cout << "清空成功！" << endl;
 	}
 
 	system("pause");
 	system("cls");
-}
-
-// 限制必须输入整数
-void SpeechManager::isInt(istream & in, int& num)
-{
-	int s;
-	char str[200];
-	in >> num;
-	s = in.rdstate();
-	while (s)
-	{
-		in.clear();
-		in >> str;
-		cout << "您的输入为非整数，请您重新输入" << endl;
-		in >> num;
-		s = in.rdstate();
-	}
 }
 
 // 析构函数

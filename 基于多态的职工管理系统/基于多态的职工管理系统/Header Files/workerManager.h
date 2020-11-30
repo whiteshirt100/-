@@ -6,6 +6,7 @@ using namespace std;
 #include "employee.h"
 #include "manager.h"
 #include "boss.h"
+#include "function.h"
 
 #include <fstream>
 #define FILENAME "empFile.txt"
@@ -62,8 +63,6 @@ public:
 	// 清空文件
 	void cleanFile();
 
-	// 判断输入是否为整数
-	static void isInt(istream& in, int& Int);
 
 public:
 	// 记录文件中的人数个数
